@@ -1,32 +1,35 @@
-import { NextPage } from 'next';
-import Head from 'next/head';
-import Image from 'next/image';
-import Link from 'next/link';
-import { useRouter } from 'next/router';
-import style from '../styles/Home.module.css';
+import { GetStaticProps, GetStaticPropsContext } from 'next';
+import * as React from 'react';
 
-const Home: NextPage = () => {
-  const router = useRouter();
+export interface PostListPageProps {
+    posts: any[];
+}
 
-  function goToDetailPage() {
-    router.push({
-      pathname: '/posts/[postId]',
-      query: {
-        postId: 123,
-        ref: 'social',
-      },
-    });
-  }
+export default function PostListPage({ posts }: PostListPageProps) {
+    console.log('posts', posts);
+    return (
+        <div>
+            <h1>Post List Page</h1>
+            <ul>
+                {posts.map((post) => (
+                    <li key={post.id}>{post.title}</li>
+                ))}
+            </ul>
+        </div>
+    );
+}
 
-  return (
-    <div className={style.container}>
-      <Head>
-        <title>Home Page</title>
-      </Head>
-      <h1>Welcome to the Home Page</h1>
-      <button onClick={goToDetailPage}>Go to Detail Page</button>
-    </div>
-  );
+export const getStaticProps: GetStaticProps<PostListPageProps> = async (
+    context: GetStaticPropsContext
+) => {
+    console.log('static props');
+    const response = await fetch('https://api.example.com/posts'); // Thay URL bằng URL thật của API
+    const data = await response.json();
+    console.log(data);
+
+    return {
+        props: {
+            posts: data.data.map((x: any) => ({ id: x.id, title: x.title })),
+        },
+    };
 };
-
-export default Home;

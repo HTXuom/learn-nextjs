@@ -1,18 +1,32 @@
-import { link } from 'fs';
+import { NextPage } from 'next';
+import Head from 'next/head';
+import Image from 'next/image';
 import Link from 'next/link';
-import * as React from 'react';
+import { useRouter } from 'next/router';
+import style from '../styles/Home.module.css';
 
-export interface PostListPageProps {
-}
+const Home: NextPage = () => {
+  const router = useRouter();
 
-<Link href="/about">
-  <a> Go to about</a>
-</Link>
-export default function App(props: PostListPageProps) {
+  function goToDetailPage() {
+    router.push({
+      pathname: '/posts/[postId]',
+      query: {
+        postId: 123,
+        ref: 'social',
+      },
+    });
+  }
+
   return (
-    <div>
-          Post List Page 
+    <div className={style.container}>
+      <Head>
+        <title>Home Page</title>
+      </Head>
+      <h1>Welcome to the Home Page</h1>
+      <button onClick={goToDetailPage}>Go to Detail Page</button>
     </div>
   );
-      
-}
+};
+
+export default Home;
